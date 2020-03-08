@@ -1,0 +1,8 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhistcnt =6
+let g:netrw_dirhist_6='d:/'
+let g:netrw_dirhist_5='d:/Myworkdata/Program'
+let g:netrw_dirhist_4='d:/Myworkdata'
+let g:netrw_dirhist_3='d:/'
+let g:netrw_dirhist_2='d:/Myworkdata'
+let g:netrw_dirhist_1='d:/'

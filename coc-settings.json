@@ -1,0 +1,20 @@
+{
+    "suggest.triggerAfterInsertEnter": true,
+    "suggest.enablePreview": true,
+    "suggest.minTriggerInputLength": 2,
+	"diagnostic.enable":false,
+//	"diagnostic.refreshOnInsertMode": true,
+//  "diagnostic.displayByAle": true,
+	"languageserver": {
+        "clangd": {
+            "command": "clangd",
+            "rootPatterns": ["compile_flags.txt", "compile_commands.json"],
+            "filetypes": ["c", "cpp", "objc", "objcpp"]
+        }, 
+        "latex": {
+            "command": "texlab",
+            "ignoredRootPaths": ["~"],
+            "filetypes": ["tex", "bib"]
+        }
+    }
+}
