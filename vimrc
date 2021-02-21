@@ -1,13 +1,16 @@
 "scriptencoding utf-8
 set encoding=utf-8
 "----------------插件-------------------------"{{{
-call plug#begin('$HOME/vimfiles/plugged') 
+call plug#begin('$HOME/.cache/vim/plugins') 
 Plug 'scrooloose/nerdcommenter'
 Plug 'junegunn/vim-easy-align'
 Plug 'jiangmiao/auto-pairs'
 Plug 'Yggdroot/indentLine'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
-"UI
+" 关闭buffer而不关闭窗口
+Plug 'rbgrouleff/bclose.vim', {'on': 'Bclose'}
+"UI" 查看启动时间
+Plug 'dstein64/vim-startuptime', {'on':'StartupTime'}
 "Plug 'itchyny/lightline.vim'
 "Plug 'mengelbrecht/lightline-bufferline'
 Plug 'vim-airline/vim-airline'
@@ -32,8 +35,8 @@ Plug 'Yggdroot/LeaderF', { 'do': '.\install.bat' }
 Plug 'neomake/neomake'
 Plug 'lervag/vimtex',{'for':'tex'}
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } , 'for': ['markdown', 'vim-plug']}
-"Plug 'Shougo/neosnippet.vim'
-"Plug 'Shougo/neosnippet-snippets'
+Plug 'Shougo/neosnippet.vim'
+Plug 'Shougo/neosnippet-snippets'
 Plug 'honza/vim-snippets'
 Plug 'yianwillis/vimcdoc'
 Plug 'sbdchd/neoformat'
@@ -108,7 +111,7 @@ vmap <C-s> <ESC> :w<CR>
 nnoremap <leader>w :w<cr>
 "切换buff"
 nnoremap <leader>t :tabnew<cr>
-nnoremap <C-c> :close<cr>
+nnoremap q :close<cr>
 nnoremap ct :tabclose<cr>
 nnoremap <leader>bn :bn<cr> 
 " 删除当前缓冲区
@@ -402,7 +405,7 @@ vmap te <Plug>(coc-translator-ev)
 "-----------defx文件树--------------"{{{
 call defx#custom#option('_', {
 			\ 'winwidth'           : 30,
-			\ 'split'              : 'tab',
+			\ 'split'              : 'vertical',
 			\ 'direction'          : 'topleft',
 			\ 'show_ignored_files' : 1,
 			\ 'buffer_name'        : '',
@@ -410,69 +413,35 @@ call defx#custom#option('_', {
 			\ 'resume'             : 1
 			\ })
 autocmd FileType defx call s:defx_my_settings()
-function! s:defx_my_settings() abort
-	" Define mappings
-	nnoremap <silent><buffer><expr> <CR>
-				\ defx#do_action('open')
-	nnoremap <silent><buffer><expr> c
-				\ defx#do_action('copy')
-	nnoremap <silent><buffer><expr> m
-				\ defx#do_action('move')
-	nnoremap <silent><buffer><expr> p
-				\ defx#do_action('paste')
-	nnoremap <silent><buffer><expr> l
-				\ defx#do_action('open')
-	nnoremap <silent><buffer><expr> E
-				\ defx#do_action('open', 'vsplit')
-	nnoremap <silent><buffer><expr> P
-				\ defx#do_action('preview')
-	nnoremap <silent><buffer><expr> o
-				\ defx#do_action('open_tree', 'toggle')
-	nnoremap <silent><buffer><expr> K
-				\ defx#do_action('new_directory')
-	nnoremap <silent><buffer><expr> N
-				\ defx#do_action('new_file')
-	nnoremap <silent><buffer><expr> M
-				\ defx#do_action('new_multiple_files')
-	nnoremap <silent><buffer><expr> C
-				\ defx#do_action('toggle_columns',
-				\                'mark:indent:icon:filename:type:size:time')
-	nnoremap <silent><buffer><expr> S
-				\ defx#do_action('toggle_sort', 'time')
-	nnoremap <silent><buffer><expr> d
-				\ defx#do_action('remove')
-	nnoremap <silent><buffer><expr> r
-				\ defx#do_action('rename')
-	nnoremap <silent><buffer><expr> !
-				\ defx#do_action('execute_command')
-	nnoremap <silent><buffer><expr> x
-				\ defx#do_action('execute_system')
-	nnoremap <silent><buffer><expr> yy
-				\ defx#do_action('yank_path')
-	nnoremap <silent><buffer><expr> .
-				\ defx#do_action('toggle_ignored_files')
-	nnoremap <silent><buffer><expr> ;
-				\ defx#do_action('repeat')
-	nnoremap <silent><buffer><expr> h
-				\ defx#do_action('cd', ['..'])
-	nnoremap <silent><buffer><expr> ~
-				\ defx#do_action('cd')
-	nnoremap <silent><buffer><expr> q
-				\ defx#do_action('quit')
-	nnoremap <silent><buffer><expr> <Space>
-				\ defx#do_action('toggle_select') . 'j'
-	nnoremap <silent><buffer><expr> *
-				\ defx#do_action('toggle_select_all')
-	nnoremap <silent><buffer><expr> j
-				\ line('.') == line('$') ? 'gg' : 'j'
-	nnoremap <silent><buffer><expr> k
-				\ line('.') == 1 ? 'G' : 'k'
-	nnoremap <silent><buffer><expr> <C-l>
-				\ defx#do_action('redraw')
-	nnoremap <silent><buffer><expr> <C-g>
-				\ defx#do_action('print')
-	nnoremap <silent><buffer><expr> cd
-				\ defx#do_action('change_vim_cwd')
+function! s:defx_custom_settings() abort
+    nnoremap <silent><buffer><expr> N                   defx#do_action('new_file')                      " 新建文件/文件夹
+    nnoremap <silent><buffer><expr> D                   defx#do_action('remove_trash')                  " 删除
+    nnoremap <silent><buffer><expr> Y                   defx#do_action('copy')                          " 复制
+    nnoremap <silent><buffer><expr> P                   defx#do_action('paste')                         " 粘贴
+    nnoremap <silent><buffer><expr> dd                  defx#do_action('move')                          " 剪切
+    nnoremap <silent><buffer><expr> R                   defx#do_action('rename')                        " 重命名
+    nnoremap <silent><buffer><expr> v                   defx#do_action('toggle_select') . 'j'           " 选择
+    nnoremap <silent><buffer><expr> V                   defx#do_action('toggle_select') . 'k'           " 选择
+    nnoremap <silent><buffer><expr> *                   defx#do_action('toggle_select')                 " 选择但不移动
+    nnoremap <silent><buffer><expr> x                   defx#do_action('execute_system')                " 执行
+    nnoremap <silent><buffer><expr> yp                  defx#do_action('yank_path')                     " 复制路径
+    nnoremap <silent><buffer><expr> h                   defx#do_action('call', 'DefxSmartH')            " 关闭节点或者返回上一层目录，但不设置cwd
+    nnoremap <silent><buffer><expr> l                   defx#do_action('call', 'DefxSmartL')            " 展开或者打开文件
+    nnoremap <silent><buffer><expr> L                   defx#do_action('open_tree_recursive')           " 递归展开
+    nnoremap <silent><buffer><expr> q                   defx#do_action('quit')                          " 关闭的defx
+    nnoremap <silent><buffer><expr> r                   defx#do_action('redraw')
+    nnoremap <silent><buffer><expr> <Cr>                defx#do_action('call', 'DefxSmartCr')           " 打开文件或者进入目录
+    nnoremap <silent><buffer><expr> <backspace>         defx#do_action('call', 'DefxSmartBackSpace')    " 返回上一级目录并设置cwd
+    nnoremap <silent><buffer><expr> W                   defx#do_action('drop', 'vsplit')
+    nnoremap <silent><buffer><expr> w                   defx#do_action('drop', 'split')
+    nnoremap <silent><buffer><expr> t                   defx#do_action('drop', 'tabedit')
+    nnoremap <silent><buffer><expr> .                   defx#do_action('toggle_ignored_files')          " 显示隐藏文件
+    nnoremap <silent><buffer><expr> s                   defx#do_action('toggle_sort')                   " 排序
+    nnoremap <silent><buffer><expr> ~                   defx#do_action('cd')
+    nnoremap <silent><buffer><expr> x                   defx#do_action('execute_command')
+    nnoremap <silent><buffer><expr> `                   defx#do_action('cd', getcwd())                  " 回到工作目录
+    nnoremap <silent><buffer><expr> cd                  defx#do_action('change_vim_cwd')                " 将当前目录设置为工作目录
+    nnoremap <silent><buffer><expr> f                   defx#do_action('search')
 endfunction
 
 
@@ -482,27 +451,6 @@ nnoremap <silent> <space>ft :Defx <cr>
 "}}}
 
 
-"---------------ale---------------------"{{{
-" Always show the signcolumn, otherwise it would shift the text each time
-"let g:ale_sign_column_always   = 1
-"let g:ale_sign_error           = '✗'
-"let g:ale_sign_warning         = '⚡'
-"let g:ale_echo_msg_format      = '[%linter%] %s [%severity%]'
-"let g:ale_lint_on_text_changed = 'always'
-"let g:ale_set_loclist          = 0
-"let g:ale_set_quickfix         = 1   " use quickfix list instead of the loclist  pyls
-"let g:ale_linters              = {
-			"\   'c':['clang'],
-			"\   'cpp': ['clang'],
-			"\   'tex': ['texlab'],
-			"\   'python': ['flake8', 'yapf'],  
-			"\ }
-"let g:ale_c_clang_options = '-Wall -O2 -std=c99'
-"nnoremap <leader>ep <Plug>(ale_previous_wrap)
-"nnoremap <leader>en <Plug>(ale_next_wrap)
-"<leader>d查看错误或警告的详细信息
-"nnoremap <leader>ed :ALEDetail<CR>  
-"}}}
 
 " When writing a buffer (no delay).
 call neomake#configure#automake('w')
@@ -555,14 +503,60 @@ nnoremap <silent> <Leader>rg :Leaderf rg<CR>
 
 
 " -------neosnippet
-"imap <expr><tab> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<c-j>" : "\<tab>"{{{{{{
-"smap <expr><tab> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<tab>"
+imap <expr><tab> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<c-j>" : "\<tab>"
+smap <expr><tab> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<tab>"
 
-"nnoremap <space>s :NeoSnippetEdit<cr>
-""deoplete-jedi setting
-""let g:deoplete#sources#jedi#server_timeout=100
-""let g:deoplete#sources#jedi#statement_length=100}}}}}}
+nnoremap <space>s :NeoSnippetEdit<cr>
+"deoplete-jedi setting
+"let g:deoplete#sources#jedi#server_timeout=100
+"let g:deoplete#sources#jedi#statement_length=100
 
-"let g:neosnippet#snippets_directory=['$HOME/.vim/plugged/neosnippet-snippets/neosnippets']
+let g:neosnippet#snippets_directory=['$HOME/.cache/vim/plugins/neosnippet-snippets/neosnippets']
 "let g:neosnippet#enable_completed_snippet=1
+function! s:buffer_close() abort
+    redir => val
+        exec "buffers"
+    redir end
+    if len(val) > 0
+        exec "Bclose"
+    endif
+endfunction
+nnoremap Q :silent call <SID>buffer_close()<cr>
+
+" startify{{{
+set encoding=utf-8
+" For startify
+let g:startify_padding_left = 10
+let g:startify_custom_header = [
+\'                                                         ',
+\'             ▄█    █▄   ▄█     ▄▄▄▄███▄▄▄▄      ▄████████',
+\'            ███    ███ ███   ▄██▀▀▀███▀▀▀██▄   ███    ███',
+\'            ███    ███ ███▌  ███   ███   ███   ███    █▀',
+\'            ███    ███ ███▌  ███   ███   ███  ▄███▄▄▄',
+\'            ███    ███ ███▌  ███   ███   ███ ▀▀███▀▀▀',
+\'            ███    ███ ███   ███   ███   ███   ███    █▄',
+\'            ███    ███ ███   ███   ███   ███   ███    ███',
+\'             ▀██████▀  █▀     ▀█   ███   █▀    ██████████',
+\'                                                         ',
+\'                                                         ',
+\]
+
+let g:startify_files_number = 6
+let g:startify_dir_number = 6
+
+
+" command 命令
+let g:startify_commands = [
+    \ {'u': ['插件更新', 'DeinUpdate']},
+    \ {'t': ['打开终端', 'terminal']},
+    \ {'s': ['启动时间', 'StartupTime']},
+    \ ]
+
+let g:startify_lists = [
+       \ { 'type': 'files',     'header': ['        MRU']            },
+       \ { 'type': 'dir',       'header': ['        MRU '. getcwd()] },
+       \ { 'type': 'commands',  'header': ['        Commands']       },
+       \ ]
+"}}}
+
 
